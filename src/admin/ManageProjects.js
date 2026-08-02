@@ -207,7 +207,7 @@ function ManageProjects() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Github
+                  GitHUB
                 </a>
 
               </td>
