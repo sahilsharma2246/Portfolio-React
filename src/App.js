@@ -1,9 +1,14 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
 import "./App.css";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import PrivateRoute from "./components/PrivateRoute";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -13,18 +18,29 @@ import Certificates from "./pages/Certificates";
 import Resume from "./pages/Resume";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+
+import Dashboard from "./admin/Dashboard";
+import ManageProjects from "./admin/ManageProjects";
+import ManageCertificates from "./admin/ManageCertificates";
+import Messages from "./admin/Messages";
+import Profile from "./admin/Profile";
+
+import PrivateRoute from "./components/PrivateRoute";
 import Temp from "./Temp";
 
-function App() {
-  return (
-    <BrowserRouter>
+function Layout() {
+  const location = useLocation();
 
-      <Navbar />
+  const hideLayout =
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname === "/logout";
+
+  return (
+    <>
+      {!hideLayout && <Navbar />}
 
       <Routes>
-
-        {/* Public Routes */}
+        {/* User Pages */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/skills" element={<Skills />} />
@@ -34,7 +50,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Dashboard */}
+        {/* Admin Pages */}
         <Route
           path="/dashboard"
           element={
@@ -44,13 +60,54 @@ function App() {
           }
         />
 
-        {/* Logout */}
-        <Route path="/logout" element={<Temp />} />
+        <Route
+          path="/dashboard/projects"
+          element={
+            <PrivateRoute>
+              <ManageProjects />
+            </PrivateRoute>
+          }
+        />
 
+        <Route
+          path="/dashboard/certificates"
+          element={
+            <PrivateRoute>
+              <ManageCertificates />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/messages"
+          element={
+            <PrivateRoute>
+              <Messages />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="/logout" element={<Temp />} />
       </Routes>
 
-      <Footer />
+      {!hideLayout && <Footer />}
+    </>
+  );
+}
 
+function App() {
+  return (
+    <BrowserRouter>
+      <Layout />
     </BrowserRouter>
   );
 }
