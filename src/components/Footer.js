@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import "./Footer.css";
 
 function Footer() {
@@ -15,8 +15,9 @@ function Footer() {
         </p>
 
         <div className="footer-icons">
+
           <a
-            href="https://github.com/"
+            href="https://github.com/sahilsharma2246"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -24,22 +25,21 @@ function Footer() {
           </a>
 
           <a
-            href="https://linkedin.com/"
+            href="https://www.linkedin.com/in/sahil-sharma-251589358"
             target="_blank"
             rel="noopener noreferrer"
           >
             <FaLinkedin />
           </a>
 
-          
-
-          <a href="mailto:your@email.com">
+          <a href="mailto:sahilwsharma2246@gmail.com">
             <FaEnvelope />
           </a>
+
         </div>
 
         <p className="copyright">
-          © {year} Portfolio. All Rights Reserved.
+          © {year} Sahil. All Rights Reserved.
         </p>
 
       </div>

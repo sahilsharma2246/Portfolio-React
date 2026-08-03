@@ -4,118 +4,71 @@ import { useEffect, useState } from "react";
 import firedb from "../Firebase";
 import "./Skills.css";
 
-
 function Skills() {
-
 
   const [skills, setSkills] = useState({});
 
-
-
   useEffect(() => {
 
+    firedb.child("Skills").on("value", (snapshot) => {
 
-    firedb.child("Skills").on("value", (snapshot)=>{
-
-
-      if(snapshot.val() != null){
-
+      if (snapshot.val() != null) {
         setSkills(snapshot.val());
-
-      }
-      else{
-
+      } else {
         setSkills({});
-
       }
-
 
     });
 
-
-
-    return () => {
-
-      firedb.child("Skills").off();
-
-    };
-
+    return () => firedb.child("Skills").off();
 
   }, []);
 
-
-
-
-
   return (
 
-
-    <section className="skills-section">
-
+    <section className="skills">
 
       <div className="container">
 
+        <div className="section-title">
 
-        <h1 className="section-title">
-          My Skills
-        </h1>
+          <h2>Skills</h2>
 
-
-
-        <p className="section-subtitle">
-          Technologies and tools I work with
-        </p>
-
-
-
-
-
-        <div className="skills-container">
-
-
-          {
-
-            Object.keys(skills).map((id)=>{
-
-
-              return (
-
-                <div 
-                  className="skill-box"
-                  key={id}
-                >
-
-
-                  <h3>
-
-                    {skills[id].name}
-
-                  </h3>
-
-
-                </div>
-
-              )
-
-
-            })
-
-          }
-
+          <p>Technologies and tools I use for building modern web applications.</p>
 
         </div>
 
+        <div className="skills-card">
 
+          {
+            Object.keys(skills).map((id) => (
+
+              <div
+                className="skill-row"
+                key={id}
+              >
+
+                <span className="skill-category">
+                  {skills[id].category}:
+                </span>
+
+                <span className="skill-items">
+                  {skills[id].skills}
+                </span>
+
+              </div>
+
+            ))
+          }
+
+        </div>
 
       </div>
 
-
     </section>
-
 
   );
 
 }
-
 
 export default Skills;

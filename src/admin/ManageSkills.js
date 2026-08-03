@@ -4,329 +4,169 @@ import React, { useEffect, useState } from "react";
 import firedb from "../Firebase";
 import "./ManageSkill.css";
 
-
 function ManageSkill() {
 
+  const initialState = {
+    category: "",
+    skills: ""
+  };
 
-  const [skill, setSkill] = useState("");
-
+  const [data, setData] = useState(initialState);
   const [skills, setSkills] = useState({});
-
   const [editId, setEditId] = useState("");
 
-
-
-
-
   useEffect(() => {
-
     loadSkills();
-
   }, []);
-
-
-
-
 
   const loadSkills = () => {
 
+    firedb.child("Skills").on("value", (snapshot) => {
 
-    firedb.child("Skills").on("value",(snapshot)=>{
-
-
-      if(snapshot.val()!=null){
-
+      if (snapshot.val() != null)
         setSkills(snapshot.val());
-
-      }
-      else{
-
+      else
         setSkills({});
-
-      }
-
 
     });
 
-
   };
 
+  const handleChange = (e) => {
 
+    setData({
+      ...data,
+      [e.target.name]: e.target.value
+    });
 
-
-
+  };
 
   const saveSkill = () => {
 
-
-    if(skill.trim()===""){
-
-      alert("Enter Skills Name");
-
+    if (data.category === "" || data.skills === "") {
+      alert("Fill all fields");
       return;
-
     }
 
+    if (editId === "") {
 
+      firedb.child("Skills").push(data, (err) => {
 
-    if(editId){
-
-
-      // Update Skill
-
-      firedb
-      .child(`Skills/${editId}`)
-      .set(
-        {
-          name:skill
-        },
-        (err)=>{
-
-
-          if(err){
-
-            alert(err);
-
-          }
-          else{
-
-            alert("Skill Updated Successfully");
-
-            setSkill("");
-
-            setEditId("");
-
-          }
-
-
+        if (err)
+          alert(err);
+        else {
+          alert("Added Successfully");
+          setData(initialState);
         }
-      );
 
-
+      });
 
     }
-    else{
+    else {
 
+      firedb.child(`Skills/${editId}`).set(data, (err) => {
 
-      // Add Skill
-
-      firedb
-      .child("Skills")
-      .push(
-        {
-          name:skill
-        },
-        (err)=>{
-
-
-          if(err){
-
-            alert(err);
-
-          }
-          else{
-
-            alert("Skill Added Successfully");
-
-            setSkill("");
-
-          }
-
-
+        if (err)
+          alert(err);
+        else {
+          alert("Updated Successfully");
+          setEditId("");
+          setData(initialState);
         }
-      );
 
+      });
 
     }
-
 
   };
 
+  const editSkill = (id) => {
 
-
-
-
-
-
-  const editSkill=(id)=>{
-
-
-    setSkill(skills[id].name);
-
+    setData(skills[id]);
     setEditId(id);
 
+  };
 
-    window.scrollTo({
+  const deleteSkill = (id) => {
 
-      top:0,
+    if (window.confirm("Delete this category?")) {
 
-      behavior:"smooth"
+      firedb.child(`Skills/${id}`).remove();
 
-    });
-
+    }
 
   };
 
+  return (
 
+    <div className="manage-skill">
 
+      <h2>Manage Skills</h2>
 
+      <div className="skill-form">
 
+        <input
+          type="text"
+          name="category"
+          placeholder="Category"
+          value={data.category}
+          onChange={handleChange}
+        />
 
+        <textarea
+          rows="5"
+          name="skills"
+          placeholder="JavaScript, React, Node..."
+          value={data.skills}
+          onChange={handleChange}
+        />
 
-  const deleteSkill=(id)=>{
+        <button onClick={saveSkill}>
+          {editId ? "Update Category" : "Add Category"}
+        </button>
 
+      </div>
 
-    firedb
-    .child(`Skills/${id}`)
-    .remove((err)=>{
+      <div className="skill-list">
 
+        {
+          Object.keys(skills).map((id) => (
 
-      if(err){
+            <div className="skill-card" key={id}>
 
-        alert(err);
+              <h3>{skills[id].category}</h3>
 
-      }
-      else{
+              <p>{skills[id].skills}</p>
 
-        alert("Skill Deleted");
+              <div className="skill-actions">
 
-      }
+                <button
+                  className="edit-btn"
+                  onClick={() => editSkill(id)}
+                >
+                  Edit
+                </button>
 
+                <button
+                  className="delete-btn"
+                  onClick={() => deleteSkill(id)}
+                >
+                  Delete
+                </button>
 
-    });
+              </div>
 
+            </div>
 
-  };
+          ))
+        }
 
+      </div>
 
+    </div>
 
-
-
-
-return (
-
-<div className="manage-skill">
-
-
-<h2>
-Manage Skills
-</h2>
-
-
-
-
-<div className="skill-form">
-
-
-<input
-
-type="text"
-
-placeholder="Enter Skill"
-
-value={skill}
-
-onChange={(e)=>setSkill(e.target.value)}
-
-/>
-
-
-
-
-<button onClick={saveSkill}>
-
-{
-editId ? "Update Skill" : "Add Skill"
-}
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-
-<div className="skill-list">
-
-
-{
-
-Object.keys(skills).map((id)=>(
-
-
-<div
-
-className="skill-card"
-
-key={id}
-
->
-
-
-<h3>
-{skills[id].name}
-</h3>
-
-
-
-<div className="skill-actions">
-
-
-<button
-
-className="edit-btn"
-
-onClick={()=>editSkill(id)}
-
->
-
-Edit
-
-</button>
-
-
-
-
-<button
-
-className="delete-btn"
-
-onClick={()=>deleteSkill(id)}
-
->
-
-Delete
-
-</button>
-
-
-</div>
-
-
-
-</div>
-
-
-
-))
-
+  );
 
 }
-
-
-</div>
-
-
-
-</div>
-
-);
-
-}
-
 
 export default ManageSkill;

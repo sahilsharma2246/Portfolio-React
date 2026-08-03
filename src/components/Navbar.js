@@ -14,8 +14,8 @@ function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="logo">
-          Portfolio
-        </Link>
+  &lt;Sahil /&gt;
+</Link>
 
         {/* Navigation Links */}
         <nav className={menuOpen ? "nav-links active" : "nav-links"}>
