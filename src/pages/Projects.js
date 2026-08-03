@@ -1,98 +1,196 @@
+/* eslint-disable eqeqeq */
+
+import { useEffect, useState } from "react";
+import firedb from "../Firebase";
 import "./Projects.css";
 
-const projects = [
-  {
-    id: 1,
-    title: "Portfolio Website",
-    description:
-      "A responsive portfolio website built using React and Firebase.",
-    tech: ["React", "Firebase", "CSS"],
-    image: "https://via.placeholder.com/500x300",
-    github: "https://github.com/",
-    demo: "https://example.com",
-  },
-  {
-    id: 2,
-    title: "Restaurant Website",
-    description:
-      "A full-stack restaurant management application using the MERN Stack.",
-    tech: ["MongoDB", "Express", "React", "Node"],
-    image: "https://via.placeholder.com/500x300",
-    github: "https://github.com/",
-    demo: "https://example.com",
-  },
-  {
-    id: 3,
-    title: "Expense Tracker",
-    description:
-      "Track daily expenses with charts and category management.",
-    tech: ["React", "Firebase"],
-    image: "https://via.placeholder.com/500x300",
-    github: "https://github.com/",
-    demo: "https://example.com",
-  },
-];
 
 function Projects() {
+
+
+  const [projects, setProjects] = useState({});
+
+
+
+  useEffect(() => {
+
+
+    firedb.child("Projects").on("value", (snapshot)=>{
+
+
+      if(snapshot.val()!=null){
+
+        setProjects(snapshot.val());
+
+      }
+      else{
+
+        setProjects({});
+
+      }
+
+
+    });
+
+
+
+    return ()=>{
+
+      firedb.child("Projects").off();
+
+    };
+
+
+  }, []);
+
+
+
+
+
   return (
-    <section className="projects">
+
+
+    <section className="projects-section">
+
+
       <div className="container">
 
-        <div className="section-title">
-          <h2>My Projects</h2>
-          <p>Some of my recent work.</p>
-        </div>
 
-        <div className="project-grid">
-          {projects.map((project) => (
-            <div className="project-card" key={project.id}>
+        <h1 className="section-title">
+          My Projects
+        </h1>
+
+
+        <p className="section-subtitle">
+          Some of my recent work and applications
+        </p>
+
+
+
+
+
+        <div className="projects-container">
+
+
+        {
+
+          Object.keys(projects).map((id)=>(
+
+
+            <div 
+              className="project-card"
+              key={id}
+            >
+
+
 
               <img
-                src={project.image}
-                alt={project.title}
+
+                src={projects[id].image}
+
+                alt={projects[id].title}
+
               />
+
+
+
 
               <div className="project-content">
 
-                <h3>{project.title}</h3>
 
-                <p>{project.description}</p>
+                <h2>
+                  {projects[id].title}
+                </h2>
 
-                <div className="tech-stack">
-                  {project.tech.map((item, index) => (
-                    <span key={index}>{item}</span>
-                  ))}
-                </div>
 
-                <div className="project-buttons">
+
+
+                <p>
+                  {projects[id].description}
+                </p>
+
+
+
+
+
+                <span className="tech">
+
+                  {projects[id].tech}
+
+                </span>
+
+
+
+
+
+
+                <div className="project-links">
+
+
                   <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn"
-                  >
-                    GitHub
-                  </a>
 
-                  <a
-                    href={project.demo}
+                    href={projects[id].live}
+
                     target="_blank"
+
                     rel="noreferrer"
-                    className="btn btn-outline"
+
                   >
+
                     Live Demo
+
                   </a>
+
+
+
+
+
+                  <a
+
+                    href={projects[id].github}
+
+                    target="_blank"
+
+                    rel="noreferrer"
+
+                  >
+
+                    Source Code
+
+                  </a>
+
+
+
                 </div>
+
+
 
               </div>
 
+
+
+
             </div>
-          ))}
+
+
+          ))
+
+
+        }
+
+
         </div>
 
+
       </div>
+
+
     </section>
+
+
   );
+
 }
+
 
 export default Projects;

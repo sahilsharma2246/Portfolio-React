@@ -1,81 +1,175 @@
+/* eslint-disable eqeqeq */
+
+import { useEffect, useState } from "react";
+import firedb from "../Firebase";
 import "./Certificates.css";
 
-const certificates = [
-  {
-    id: 1,
-    title: "Full Stack Development",
-    issuer: "Udemy",
-    image: "https://via.placeholder.com/500x300",
-    link: "#",
-  },
-  {
-    id: 2,
-    title: "React.js Certificate",
-    issuer: "Code Pulse",
-    image: "https://via.placeholder.com/500x300",
-    link: "#",
-  },
-  {
-    id: 3,
-    title: "Network Bulls Training",
-    issuer: "Network Bulls",
-    image: "https://via.placeholder.com/500x300",
-    link: "#",
-  },
-  {
-    id: 4,
-    title: "AI Workshop",
-    issuer: "College",
-    image: "https://via.placeholder.com/500x300",
-    link: "#",
-  },
-];
 
 function Certificates() {
+
+
+  const [certificates, setCertificates] = useState({});
+
+
+
+  useEffect(() => {
+
+
+    firedb.child("Certificates").on("value", (snapshot)=>{
+
+
+      if(snapshot.val()!=null){
+
+        setCertificates(snapshot.val());
+
+      }
+      else{
+
+        setCertificates({});
+
+      }
+
+
+    });
+
+
+
+    return ()=>{
+
+      firedb.child("Certificates").off();
+
+    };
+
+
+  }, []);
+
+
+
+
+
+
   return (
-    <section className="certificates">
+
+
+    <section className="certificates-section">
+
+
       <div className="container">
 
-        <div className="section-title">
-          <h2>Certificates</h2>
-          <p>My certifications and achievements.</p>
-        </div>
 
-        <div className="certificate-grid">
+        <h1 className="section-title">
 
-          {certificates.map((certificate) => (
-            <div className="certificate-card" key={certificate.id}>
+          My Certificates
+
+        </h1>
+
+
+
+        <p className="section-subtitle">
+
+          Certifications and achievements that showcase my skills
+
+        </p>
+
+
+
+
+
+
+        <div className="certificates-container">
+
+
+        {
+
+          Object.keys(certificates).map((id)=>(
+
+
+            <div
+
+              className="certificate-card"
+
+              key={id}
+
+            >
+
+
 
               <img
-                src={certificate.image}
-                alt={certificate.title}
+
+                src={certificates[id].image}
+
+                alt={certificates[id].title}
+
               />
+
+
+
 
               <div className="certificate-content">
 
-                <h3>{certificate.title}</h3>
 
-                <p>{certificate.issuer}</p>
+                <h2>
+
+                  {certificates[id].title}
+
+                </h2>
+
+
+
+
+                <p>
+
+                  Issued by: {certificates[id].issuer}
+
+                </p>
+
+
+
+
 
                 <a
-                  href={certificate.link}
+
+                  href={certificates[id].link}
+
                   target="_blank"
+
                   rel="noreferrer"
-                  className="btn"
+
+                  className="certificate-btn"
+
                 >
+
                   View Certificate
+
                 </a>
+
+
 
               </div>
 
+
+
             </div>
-          ))}
+
+
+          ))
+
+        }
+
 
         </div>
 
+
+
       </div>
+
+
     </section>
+
+
   );
+
 }
+
 
 export default Certificates;

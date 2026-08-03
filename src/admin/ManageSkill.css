@@ -1,0 +1,290 @@
+.manage-skill {
+
+    padding:30px;
+    min-height:100vh;
+    background:#f8fafc;
+
+}
+
+
+
+.manage-skill h2 {
+
+    color:#2563eb;
+    font-size:32px;
+    margin-bottom:25px;
+
+}
+
+
+
+/* Form */
+
+.skill-form {
+
+    background:white;
+
+    padding:30px;
+
+    max-width:600px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.08);
+
+    margin-bottom:40px;
+
+}
+
+
+
+.skill-form input {
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    margin-bottom:15px;
+
+    font-size:15px;
+
+}
+
+
+
+
+.skill-form button {
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 25px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+
+
+
+
+/* Multiple Skills Container */
+
+.skill-list {
+
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+
+
+
+
+/* Skill Card */
+
+.skill-card {
+
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:12px;
+
+
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,0.08);
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+
+    min-height:80px;
+
+}
+
+
+
+
+
+.skill-card h3 {
+
+
+    margin:0;
+
+    color:#1f2937;
+
+    font-size:18px;
+
+}
+
+
+
+
+
+
+.skill-actions {
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+
+
+
+
+.edit-btn {
+
+
+    background:#f59e0b;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 12px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+
+
+.delete-btn {
+
+
+    background:#ef4444;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 12px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+
+
+
+
+
+
+/* Tablet */
+
+@media(max-width:1024px){
+
+
+    .skill-list {
+
+        grid-template-columns:
+        repeat(3,1fr);
+
+    }
+
+
+}
+
+
+
+
+
+
+
+/* Mobile */
+
+@media(max-width:768px){
+
+
+    .manage-skill {
+
+        padding:15px;
+
+    }
+
+
+
+    .skill-list {
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+
+
+    .skill-card {
+
+        flex-direction:column;
+
+        gap:15px;
+
+        text-align:center;
+
+    }
+
+
+
+    .skill-actions {
+
+        width:100%;
+
+    }
+
+
+
+    .edit-btn,
+    .delete-btn {
+
+        flex:1;
+
+    }
+
+
+}
+
+
+
+
+
+
+
+@media(max-width:450px){
+
+
+    .skill-list {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+}

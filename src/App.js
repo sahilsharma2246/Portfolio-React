@@ -21,95 +21,142 @@ import Login from "./pages/Login";
 
 import Dashboard from "./admin/Dashboard";
 import ManageProjects from "./admin/ManageProjects";
+import ManageSkills from "./admin/ManageSkills";   // ✅ Added
 import ManageCertificates from "./admin/ManageCertificates";
 import Messages from "./admin/Messages";
 import Profile from "./admin/Profile";
+import AdminLayout from "./admin/AdminLayout";
 
 import PrivateRoute from "./components/PrivateRoute";
 import Temp from "./Temp";
 
+
 function Layout() {
+
   const location = useLocation();
+
 
   const hideLayout =
     location.pathname.startsWith("/dashboard") ||
     location.pathname === "/logout";
 
+
   return (
     <>
+
       {!hideLayout && <Navbar />}
 
+
       <Routes>
-        {/* User Pages */}
+
+
+        {/* Public Routes */}
+
         <Route path="/" element={<Home />} />
+
         <Route path="/about" element={<About />} />
+
         <Route path="/skills" element={<Skills />} />
+
         <Route path="/projects" element={<Projects />} />
-        <Route path="/certificates" element={<Certificates />} />
+
+        <Route 
+          path="/certificates" 
+          element={<Certificates />} 
+        />
+
         <Route path="/resume" element={<Resume />} />
+
         <Route path="/contact" element={<Contact />} />
+
         <Route path="/login" element={<Login />} />
 
-        {/* Admin Pages */}
+
+
+
+        {/* Admin Layout */}
+
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <AdminLayout />
             </PrivateRoute>
           }
+        >
+
+          <Route index element={<Dashboard />} />
+
+
+          <Route 
+            path="projects" 
+            element={<ManageProjects />} 
+          />
+
+
+          <Route 
+            path="skills" 
+            element={<ManageSkills />} 
+          />
+
+
+          <Route 
+            path="certificates" 
+            element={<ManageCertificates />} 
+          />
+
+
+          <Route 
+            path="messages" 
+            element={<Messages />} 
+          />
+
+
+          <Route 
+            path="profile" 
+            element={<Profile />} 
+          />
+
+
+        </Route>
+
+
+
+
+        {/* Logout */}
+
+        <Route 
+          path="/logout" 
+          element={<Temp />} 
         />
 
-        <Route
-          path="/dashboard/projects"
-          element={
-            <PrivateRoute>
-              <ManageProjects />
-            </PrivateRoute>
-          }
-        />
 
-        <Route
-          path="/dashboard/certificates"
-          element={
-            <PrivateRoute>
-              <ManageCertificates />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/messages"
-          element={
-            <PrivateRoute>
-              <Messages />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/profile"
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
-        />
-
-        <Route path="/logout" element={<Temp />} />
       </Routes>
 
+
       {!hideLayout && <Footer />}
+
+
     </>
   );
 }
 
+
+
+
 function App() {
+
   return (
+
     <BrowserRouter>
+
       <Layout />
+
     </BrowserRouter>
+
   );
+
 }
+
 
 export default App;

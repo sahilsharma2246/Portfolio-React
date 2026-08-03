@@ -1,0 +1,49 @@
+.messages{
+    padding:30px;
+}
+
+.messages h2{
+    color:#2563eb;
+    margin-bottom:25px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+table th{
+    background:#2563eb;
+    color:#fff;
+    padding:12px;
+}
+
+table td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+.delete-btn{
+    background:#ef4444;
+    color:#fff;
+    border:none;
+    padding:8px 15px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+@media(max-width:768px){
+
+table{
+    display:block;
+    overflow-x:auto;
+}
+
+}

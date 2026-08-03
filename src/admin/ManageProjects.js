@@ -1,258 +1,452 @@
 /* eslint-disable eqeqeq */
+
 import React, { useEffect, useState } from "react";
 import firedb from "../Firebase";
-import "./ManageProjects.css";
+import "./Manageprojects.css";
+
 
 function ManageProjects() {
 
+
   const initialState = {
-    title: "",
-    technology: "",
-    description: "",
-    github: "",
-    demo: "",
-    image: ""
+
+    title:"",
+    description:"",
+    image:"",
+    tech:"",
+    github:"",
+    live:""
+
   };
 
-  const [project, setProject] = useState(initialState);
-  const [data, setData] = useState({});
-  const [editKey, setEditKey] = useState("");
 
-  useEffect(() => {
+  const [project,setProject] = useState(initialState);
 
-    firedb.child("Projects").on("value", (snapshot) => {
+  const [projects,setProjects] = useState({});
 
-      if (snapshot.val() != null) {
-        setData(snapshot.val());
+  const [editId,setEditId] = useState("");
+
+
+
+
+
+  useEffect(()=>{
+
+    loadProjects();
+
+  },[]);
+
+
+
+
+
+
+  const loadProjects = ()=>{
+
+
+    firedb.child("Projects").on("value",(snapshot)=>{
+
+
+      if(snapshot.val()!=null){
+
+        setProjects(snapshot.val());
+
       }
-      else {
-        setData({});
+      else{
+
+        setProjects({});
+
       }
+
 
     });
 
-    return () => {
-      firedb.child("Projects").off();
-    };
 
-  }, []);
+  };
 
-  function handleChange(e) {
+
+
+
+
+
+
+  const handleChange=(e)=>{
+
 
     setProject({
+
       ...project,
-      [e.target.name]: e.target.value
+
+      [e.target.name]:e.target.value
+
     });
 
-  }
 
-  function saveProject() {
+  };
 
-    if (
-      project.title === "" ||
-      project.technology === "" ||
-      project.description === ""
-    ) {
-      alert("Fill all required fields");
+
+
+
+
+
+
+  const saveProject=()=>{
+
+
+    if(project.title===""){
+
+      alert("Enter Project Title");
+
       return;
+
     }
 
-    if (editKey === "") {
 
-      firedb.child("Projects").push(project, (err) => {
 
-        if (err)
+
+    if(editId){
+
+
+      // Update Project
+
+      firedb
+      .child(`Projects/${editId}`)
+      .set(project,(err)=>{
+
+
+        if(err){
+
           alert(err);
-        else
-          alert("Project Added");
+
+        }
+        else{
+
+          alert("Project Updated Successfully");
+
+          setProject(initialState);
+
+          setEditId("");
+
+        }
+
 
       });
 
+
+
     }
 
-    else {
+    else{
 
-      firedb.child("Projects").child(editKey).set(project, (err) => {
 
-        if (err)
+      // Add Project
+
+      firedb
+      .child("Projects")
+      .push(project,(err)=>{
+
+
+        if(err){
+
           alert(err);
-        else
-          alert("Project Updated");
+
+        }
+        else{
+
+          alert("Project Added Successfully");
+
+          setProject(initialState);
+
+        }
+
 
       });
 
-      setEditKey("");
 
     }
 
-    setProject(initialState);
 
-  }
 
-  function deleteProject(key) {
+  };
 
-    if (window.confirm("Delete this Project?")) {
 
-      firedb.child("Projects").child(key).remove((err) => {
 
-        if (err)
-          alert(err);
-        else
-          alert("Deleted");
 
-      });
 
-    }
 
-  }
 
-  function editProject(key) {
+  const editProject=(id)=>{
 
-    setProject(data[key]);
-    setEditKey(key);
 
-  }
+    setProject({
 
-  return (
+      ...projects[id]
 
-    <div className="manage-projects">
+    });
 
-      <h2>Manage Projects</h2>
 
-      <div className="project-form">
+    setEditId(id);
 
-        <input
-          type="text"
-          name="title"
-          placeholder="Project Title"
-          value={project.title}
-          onChange={handleChange}
-        />
 
-        <input
-          type="text"
-          name="technology"
-          placeholder="Technology"
-          value={project.technology}
-          onChange={handleChange}
-        />
 
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={project.description}
-          onChange={handleChange}
-        />
+    window.scrollTo({
 
-        <input
-          type="text"
-          name="github"
-          placeholder="Github Link"
-          value={project.github}
-          onChange={handleChange}
-        />
+      top:0,
 
-        <input
-          type="text"
-          name="demo"
-          placeholder="Live Demo"
-          value={project.demo}
-          onChange={handleChange}
-        />
+      behavior:"smooth"
 
-        <input
-          type="text"
-          name="image"
-          placeholder="Image URL"
-          value={project.image}
-          onChange={handleChange}
-        />
+    });
 
-        <button onClick={saveProject}>
-          {editKey ? "Update Project" : "Add Project"}
-        </button>
 
-      </div>
+  };
 
-      <table>
 
-        <thead>
 
-          <tr>
 
-            <th>Title</th>
-            <th>Technology</th>
-            <th>Github</th>
-            <th>Demo</th>
-            <th>Action</th>
 
-          </tr>
 
-        </thead>
 
-        <tbody>
+  const deleteProject=(id)=>{
 
-          {Object.keys(data).map((key) => (
 
-            <tr key={key}>
+    firedb
+    .child(`Projects/${id}`)
+    .remove((err)=>{
 
-              <td>{data[key].title}</td>
 
-              <td>{data[key].technology}</td>
+      if(err){
 
-              <td>
+        alert(err);
 
-                <a
-                  href={data[key].github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  GitHUB
-                </a>
+      }
+      else{
 
-              </td>
+        alert("Project Deleted");
 
-              <td>
+      }
 
-                <a
-                  href={data[key].demo}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Demo
-                </a>
 
-              </td>
+    });
 
-              <td>
 
-                <button
-                  className="edit-btn"
-                  onClick={() => editProject(key)}
-                >
-                  Edit
-                </button>
+  };
 
-                <button
-                  className="delete-btn"
-                  onClick={() => deleteProject(key)}
-                >
-                  Delete
-                </button>
 
-              </td>
 
-            </tr>
 
-          ))}
 
-        </tbody>
 
-      </table>
 
-    </div>
+return (
 
-  );
+<div className="manage-projects">
+
+
+<h2>
+  Manage Projects
+</h2>
+
+
+
+
+<div className="project-form">
+
+
+
+<input
+type="text"
+name="title"
+placeholder="Project Title"
+value={project.title}
+onChange={handleChange}
+/>
+
+
+
+
+<textarea
+
+name="description"
+
+placeholder="Project Description"
+
+value={project.description}
+
+onChange={handleChange}
+
+/>
+
+
+
+
+
+<input
+
+type="text"
+
+name="image"
+
+placeholder="Project Image URL"
+
+value={project.image}
+
+onChange={handleChange}
+
+/>
+
+
+
+
+
+<input
+
+type="text"
+
+name="tech"
+
+placeholder="Tech Stack"
+
+value={project.tech}
+
+onChange={handleChange}
+
+/>
+
+
+
+
+
+<input
+
+type="text"
+
+name="github"
+
+placeholder="Github URL"
+
+value={project.github}
+
+onChange={handleChange}
+
+/>
+
+
+
+
+
+<input
+
+type="text"
+
+name="live"
+
+placeholder="Live Demo URL"
+
+value={project.live}
+
+onChange={handleChange}
+
+/>
+
+
+
+
+
+<button onClick={saveProject}>
+
+{
+ editId ? "Update Project" : "Add Project"
 }
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+
+<div className="project-list">
+
+
+{
+
+Object.keys(projects).map((id)=>(
+
+
+<div 
+className="project-card"
+key={id}
+>
+
+
+<h3>
+{projects[id].title}
+</h3>
+
+
+
+<div>
+
+
+<button
+
+className="edit-btn"
+
+onClick={()=>editProject(id)}
+
+>
+
+Edit
+
+</button>
+
+
+
+
+<button
+
+className="delete-btn"
+
+onClick={()=>deleteProject(id)}
+
+>
+
+Delete
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+);
+
+
+}
+
 
 export default ManageProjects;

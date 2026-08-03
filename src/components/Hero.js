@@ -1,8 +1,23 @@
+/* eslint-disable eqeqeq */
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import firedb from "../Firebase";
 import "./Hero.css";
 
 function Hero() {
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    firedb.child("Profile").on("value", (snapshot) => {
+      if (snapshot.val() != null) {
+        setProfile(snapshot.val());
+      }
+    });
+
+    return () => firedb.child("Profile").off();
+  }, []);
+
   return (
     <section className="hero">
       <div className="container hero-container">
@@ -12,18 +27,16 @@ function Hero() {
 
           <h3>Hello, I'm</h3>
 
-          <h1>Sahil Sharma</h1>
+          <h1>{profile.name}</h1>
 
-          <h2>Full Stack Developer</h2>
+          <h2>{profile.title}</h2>
 
-          <p>
-            I build responsive, user-friendly web applications using
-            React, Firebase, Node.js, Express, and MongoDB.
-          </p>
+          <p>{profile.about}</p>
 
           <div className="hero-buttons">
+
             <a
-              href="/resume.pdf"
+              href={profile.resume}
               download
               className="btn"
             >
@@ -33,12 +46,13 @@ function Hero() {
             <Link to="/contact" className="btn btn-outline">
               Contact Me
             </Link>
+
           </div>
 
           <div className="hero-social">
 
             <a
-              href="https://github.com/"
+              href={profile.github}
               target="_blank"
               rel="noreferrer"
             >
@@ -46,14 +60,14 @@ function Hero() {
             </a>
 
             <a
-              href="https://linkedin.com/"
+              href={profile.linkedin}
               target="_blank"
               rel="noreferrer"
             >
               <FaLinkedin />
             </a>
 
-            <a href="mailto:example@gmail.com">
+            <a href={`mailto:${profile.email}`}>
               <FaEnvelope />
             </a>
 
@@ -62,11 +76,14 @@ function Hero() {
         </div>
 
         {/* Right Image */}
+
         <div className="hero-image">
+
           <img
-            src="https://via.placeholder.com/350"
-            alt="Profile"
+            src={profile.image}
+            alt={profile.name}
           />
+
         </div>
 
       </div>

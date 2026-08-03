@@ -1,70 +1,336 @@
-import React from "react";
+/* eslint-disable eqeqeq */
+
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import firedb from "../Firebase";
 import "./Dashboard.css";
 
-function Dashboard() {
-  
 
-  
+function Dashboard() {
+
+
+  const [count,setCount] = useState({
+
+    projects:0,
+
+    skills:0,
+
+    certificates:0,
+
+    messages:0,
+
+    profile:0
+
+  });
+
+
+
+
+
+
+  useEffect(()=>{
+
+
+    firedb.child("Projects").on("value",(snapshot)=>{
+
+
+      setCount(prev=>({
+
+        ...prev,
+
+        projects:snapshot.val()
+        ? Object.keys(snapshot.val()).length
+        : 0
+
+      }));
+
+
+    });
+
+
+
+
+
+
+    firedb.child("Skills").on("value",(snapshot)=>{
+
+
+      setCount(prev=>({
+
+        ...prev,
+
+        skills:snapshot.val()
+        ? Object.keys(snapshot.val()).length
+        : 0
+
+      }));
+
+
+    });
+
+
+
+
+
+
+    firedb.child("Certificates").on("value",(snapshot)=>{
+
+
+      setCount(prev=>({
+
+        ...prev,
+
+        certificates:snapshot.val()
+        ? Object.keys(snapshot.val()).length
+        : 0
+
+      }));
+
+
+    });
+
+
+
+
+
+
+
+    firedb.child("Messages").on("value",(snapshot)=>{
+
+
+      setCount(prev=>({
+
+        ...prev,
+
+        messages:snapshot.val()
+        ? Object.keys(snapshot.val()).length
+        : 0
+
+      }));
+
+
+    });
+
+
+
+
+
+
+
+    firedb.child("Profile").on("value",(snapshot)=>{
+
+
+      setCount(prev=>({
+
+        ...prev,
+
+        profile:snapshot.val()
+        ? 1
+        : 0
+
+      }));
+
+
+    });
+
+
+
+
+
+
+
+    return ()=>{
+
+
+      firedb.child("Projects").off();
+
+      firedb.child("Skills").off();
+
+      firedb.child("Certificates").off();
+
+      firedb.child("Messages").off();
+
+      firedb.child("Profile").off();
+
+
+    };
+
+
+
+  },[]);
+
+
+
+
+
+
+
+
 
   return (
+
+
     <div className="dashboard">
 
-      {/* Sidebar */}
-      <div className="sidebar">
-        <h2>Admin Panel</h2>
 
-        <ul>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><Link to="/dashboard/projects">Projects</Link></li>
-          <li><Link to="/dashboard/certificates">Certificates</Link></li>
-          <li><Link to="/dashboard/messages">Messages</Link></li>
-          <li><Link to="/dashboard/profile">Profile</Link></li>
-        </ul>
 
-        <Link to="/logout" className="logout-btn">
-  Logout
-</Link>
-      </div>
+      <h1>
+        Welcome Admin 👋
+      </h1>
 
-      {/* Main Content */}
-      <div className="main-content">
 
-        <h1>Welcome Admin 👋</h1>
-        <p>Manage your portfolio from here.</p>
 
-        <div className="card-container">
+      <p>
+        Manage your portfolio from here.
+      </p>
 
-          <div className="dashboard-card">
-            <h2>Projects</h2>
-            <h3>0</h3>
-            <Link to="/dashboard/projects">Manage</Link>
-          </div>
 
-          <div className="dashboard-card">
-            <h2>Certificates</h2>
-            <h3>0</h3>
-            <Link to="/dashboard/certificates">Manage</Link>
-          </div>
 
-          <div className="dashboard-card">
-            <h2>Messages</h2>
-            <h3>0</h3>
-            <Link to="/dashboard/messages">View</Link>
-          </div>
 
-          <div className="dashboard-card">
-            <h2>Profile</h2>
-            <h3>1</h3>
-            <Link to="/dashboard/profile">Edit</Link>
-          </div>
+
+
+      <div className="card-container">
+
+
+
+
+
+
+        <div className="dashboard-card">
+
+          <h2>
+            Projects
+          </h2>
+
+          <h3>
+            {count.projects}
+          </h3>
+
+          <Link to="/dashboard/projects">
+            Manage
+          </Link>
 
         </div>
 
+
+
+
+
+
+
+        <div className="dashboard-card">
+
+          <h2>
+            Skills
+          </h2>
+
+          <h3>
+            {count.skills}
+          </h3>
+
+
+          <Link to="/dashboard/skills">
+            Manage
+          </Link>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div className="dashboard-card">
+
+          <h2>
+            Certificates
+          </h2>
+
+
+          <h3>
+            {count.certificates}
+          </h3>
+
+
+          <Link to="/dashboard/certificates">
+            Manage
+          </Link>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div className="dashboard-card">
+
+          <h2>
+            Messages
+          </h2>
+
+
+          <h3>
+            {count.messages}
+          </h3>
+
+
+          <Link to="/dashboard/messages">
+            View
+          </Link>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div className="dashboard-card">
+
+
+          <h2>
+            Profile
+          </h2>
+
+
+          <h3>
+            {count.profile}
+          </h3>
+
+
+          <Link to="/dashboard/profile">
+            Edit
+          </Link>
+
+
+        </div>
+
+
+
+
+
       </div>
 
+
+
+
+
     </div>
+
+
   );
+
 }
+
 
 export default Dashboard;

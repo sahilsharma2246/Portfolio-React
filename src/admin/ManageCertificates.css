@@ -1,0 +1,275 @@
+.manage-certificates {
+
+    padding:30px;
+    min-height:100vh;
+    background:#f8fafc;
+
+}
+
+
+
+
+.manage-certificates h2 {
+
+    color:#2563eb;
+    font-size:32px;
+    margin-bottom:25px;
+
+}
+
+
+
+
+
+.certificate-form {
+
+
+    background:white;
+
+    padding:30px;
+
+    max-width:700px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.08);
+
+    margin-bottom:40px;
+
+}
+
+
+
+
+
+.certificate-form input {
+
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:15px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+
+
+.certificate-form input:focus {
+
+    border-color:#2563eb;
+
+}
+
+
+
+
+
+
+.certificate-form button {
+
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:13px 30px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+
+
+.certificate-form button:hover {
+
+    background:#1d4ed8;
+
+}
+
+
+
+
+
+.certificate-list {
+
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:25px;
+
+}
+
+
+
+
+
+.certificate-card {
+
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,0.08);
+
+    transition:.3s;
+
+}
+
+
+
+.certificate-card:hover {
+
+    transform:translateY(-5px);
+
+}
+
+
+
+
+
+.certificate-card h3 {
+
+    color:#1f2937;
+
+    margin-bottom:10px;
+
+}
+
+
+
+.certificate-card p {
+
+    color:#64748b;
+
+}
+
+
+
+
+
+.certificate-actions {
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+
+
+
+
+.edit-btn {
+
+    background:#f59e0b;
+
+    color:white;
+
+    border:none;
+
+    padding:9px 16px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+}
+
+
+
+.edit-btn:hover {
+
+    background:#d97706;
+
+}
+
+
+
+
+
+
+.delete-btn {
+
+    background:#ef4444;
+
+    color:white;
+
+    border:none;
+
+    padding:9px 16px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+}
+
+
+
+.delete-btn:hover {
+
+    background:#dc2626;
+
+}
+
+
+
+
+
+@media(max-width:768px){
+
+
+    .manage-certificates {
+
+        padding:15px;
+
+    }
+
+
+    .certificate-form {
+
+        padding:20px;
+
+    }
+
+
+    .certificate-list {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .certificate-actions button {
+
+        flex:1;
+
+    }
+
+
+}
