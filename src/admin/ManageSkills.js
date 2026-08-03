@@ -61,7 +61,7 @@ function ManageSkill() {
 
     if(skill.trim()===""){
 
-      alert("Enter Skill Name");
+      alert("Enter Skills Name");
 
       return;
 
