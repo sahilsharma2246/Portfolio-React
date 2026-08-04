@@ -65,7 +65,7 @@ function Profile() {
 
     <div className="profile">
 
-      <h2>Profile Settings</h2>
+      <h2>Profile-Settings</h2>
 
       <input
         type="text"
