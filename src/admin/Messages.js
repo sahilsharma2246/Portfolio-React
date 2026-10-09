@@ -1,234 +1,63 @@
 /* eslint-disable eqeqeq */
-
 import React, { useEffect, useState } from "react";
 import firedb from "../Firebase";
-import "./Messages.css";
-
 
 function Messages() {
+  const [messages, setMessages] = useState({});
 
-
-  const [data,setData] = useState({});
-
-
-
-
-  useEffect(()=>{
-
-
-    firedb.child("Messages").on("value",(snapshot)=>{
-
-
-      if(snapshot.val()!=null){
-
-        setData(snapshot.val());
-
-      }
-      else{
-
-        setData({});
-
-      }
-
-
+  useEffect(() => {
+    firedb.child("Messages").on("value", (snapshot) => {
+      setMessages(snapshot.val() || {});
     });
+  }, []);
 
-
-
-
-    return ()=>{
-
-      firedb.child("Messages").off();
-
-    };
-
-
-  },[]);
-
-
-
-
-
-
-
-  const deleteMessage=(key)=>{
-
-
-    if(window.confirm("Delete this message?")){
-
-
-      firedb
-      .child("Messages")
-      .child(key)
-      .remove((err)=>{
-
-
-        if(err){
-
-          alert(err);
-
-        }
-        else{
-
-          alert("Message Deleted");
-
-        }
-
-
-      });
-
-
+  const deleteMessage = (id) => {
+    if (window.confirm("Delete message?")) {
+      firedb.child(`Messages/${id}`).remove();
     }
-
-
   };
 
-
-
-
-
-
-
-
   return (
+    <div className="space-y-6">
+      <div className="border-b border-slate-700 pb-4">
+        <h2 className="text-2xl font-bold text-white">Contact Messages</h2>
+        <p className="text-slate-400 text-sm">View user submissions from contact form</p>
+      </div>
 
-
-    <div className="messages">
-
-
-      <h2>
-        Contact Messages
-      </h2>
-
-
-
-
-
-      <table>
-
-
-        <thead>
-
-          <tr>
-
-            <th>Name</th>
-
-            <th>Email</th>
-
-            <th>Subject</th>
-
-            <th>Message</th>
-
-            <th>Action</th>
-
-
-          </tr>
-
-
-        </thead>
-
-
-
-
-
-
-        <tbody>
-
-
-        {
-
-
-          Object.keys(data).map((key)=>(
-
-
-
-            <tr key={key}>
-
-
-              <td>
-                {data[key].name}
-              </td>
-
-
-
-
-              <td>
-                {data[key].email}
-              </td>
-
-
-
-
-
-              <td>
-                {data[key].subject}
-              </td>
-
-
-
-
-
-              <td>
-                {data[key].message}
-              </td>
-
-
-
-
-
-
-              <td>
-
-
+      <div className="space-y-4">
+        {Object.keys(messages).length === 0 ? (
+          <p className="text-slate-500 text-sm">No messages received yet.</p>
+        ) : (
+          Object.keys(messages).map((id) => (
+            <div key={id} className="bg-slate-800/80 border border-slate-700/60 p-5 rounded-xl space-y-3 shadow-lg">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4 className="font-bold text-cyan-400">{messages[id].name}</h4>
+                  <a href={`mailto:${messages[id].email}`} className="text-xs text-slate-400 hover:underline">
+                    {messages[id].email}
+                  </a>
+                </div>
                 <button
-
-                className="delete-btn"
-
-                onClick={()=>deleteMessage(key)}
-
+                  onClick={() => deleteMessage(id)}
+                  className="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white text-xs font-semibold rounded"
                 >
-
-                Delete
-
+                  Delete
                 </button>
-
-
-
-              </td>
-
-
-
-
-            </tr>
-
-
-
+              </div>
+              <p className="text-sm text-slate-200 bg-slate-900/60 p-3 rounded-lg leading-relaxed border border-slate-800">
+                {messages[id].message}
+              </p>
+              {messages[id].timestamp && (
+                <p className="text-[10px] text-slate-500 text-right">
+                  Sent on: {new Date(messages[id].timestamp).toLocaleString()}
+                </p>
+              )}
+            </div>
           ))
-
-
-
-        }
-
-
-        </tbody>
-
-
-
-
-
-      </table>
-
-
-
-
-
+        )}
+      </div>
     </div>
-
-
   );
-
-
 }
-
 
 export default Messages;
