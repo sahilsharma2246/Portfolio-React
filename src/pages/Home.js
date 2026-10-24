@@ -4,16 +4,33 @@ import { Link } from "react-router-dom";
 import firedb from "../Firebase";
 
 function Home() {
-  const [profile, setProfile] = useState({});
+  // 1. Initialize state instantly from localStorage if available
+  const [profile, setProfile] = useState(() => {
+    const savedProfile = localStorage.getItem("cached_profile_data");
+    return savedProfile ? JSON.parse(savedProfile) : {};
+  });
+
+  const [loading, setLoading] = useState(() => !localStorage.getItem("cached_profile_data"));
 
   useEffect(() => {
-    firedb.child("Profile").on("value", (snapshot) => {
-      if (snapshot.val() != null) {
-        setProfile(snapshot.val());
+    // 2. Use once("value") instead of on("value") for faster one-time fetch
+    const fetchProfile = async () => {
+      try {
+        const snapshot = await firedb.child("Profile").once("value");
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          setProfile(data);
+          // Cache to localStorage for instant load on subsequent navigations
+          localStorage.setItem("cached_profile_data", JSON.stringify(data));
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setLoading(false);
       }
-    });
+    };
 
-    return () => firedb.child("Profile").off();
+    fetchProfile();
   }, []);
 
   return (
@@ -81,15 +98,19 @@ function Home() {
 
         {/* Right Section: Image */}
         <div className="shrink-0 relative group">
-          {/* Soft Periwinkle/Cyan Glow Backdrop */}
           <div className="absolute -inset-1 bg-gradient-to-r from-indigo-200 via-purple-200 to-cyan-200 rounded-3xl blur-lg opacity-70 group-hover:opacity-100 transition duration-500"></div>
 
           <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-3xl overflow-hidden border-2 border-zinc-200 bg-zinc-100 shadow-sm">
-            <img
-              src={profile.image || "https://via.placeholder.com/350"}
-              alt={profile.name || "Profile Avatar"}
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-            />
+            {loading && !profile.image ? (
+              <div className="w-full h-full bg-zinc-200 animate-pulse" />
+            ) : (
+              <img
+                src={profile.image || "https://via.placeholder.com/350"}
+                alt={profile.name || "Profile Avatar"}
+                loading="eager"
+                className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+              />
+            )}
           </div>
         </div>
       </div>
